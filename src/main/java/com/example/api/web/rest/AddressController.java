@@ -12,25 +12,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.api.domain.Adress;
-import com.example.api.service.AdressService;
+import com.example.api.domain.Address;
+import com.example.api.service.AddressService;
 
 @RestController
-@RequestMapping("/adress")
-
-public class AdressController {
+@RequestMapping("/address")
+public class AddressController {
 
 	@Autowired
-	private AdressService service;
+	private AddressService service;
 
 	@PostMapping
-	public ResponseEntity<Adress> createAdress(@Valid @RequestBody Adress adress) {
-		return service.createAdress(adress);
+	public ResponseEntity<Address> createAdress(@Valid @RequestBody Address address) {
+		return service.createAdress(address);
 	}
 
 	@PutMapping
-	public ResponseEntity<Adress> editAdress(@Valid @RequestBody Adress adress) {
-		return service.editAdress(adress);
+	public ResponseEntity<Address> editAdress(@Valid @RequestBody Address address) {
+		return service.editAdress(address);
 	}
 
 	@DeleteMapping("/{id}")

@@ -35,7 +35,7 @@ public class Customer {
 	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("customer")
-	private List<Adress> address;
+	private List<Address> address;
 
 	public Long getId() {
 		return id;
@@ -61,15 +61,14 @@ public class Customer {
 		this.email = email;
 	}
 
-	public List<Adress> getAddress() {
+	public List<Address> getAddress() {
 		return address;
 	}
 
-	public void setAddress(List<Adress> address) {
+	public void setAddress(List<Address> address) {
 		this.address = address;
 	}
 	
-	
-	
+
 
 }
