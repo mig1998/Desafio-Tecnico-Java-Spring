@@ -9,31 +9,52 @@ import org.springframework.stereotype.Service;
 
 import com.example.api.domain.Address;
 import com.example.api.repository.AddressRepository;
-
+import com.example.api.repository.CustomerRepository;
 
 @Service
 public class AddressService {
-	
+
 	@Autowired
-	private AddressRepository repository;
+	private AddressRepository addressRepository;
+
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	
+	//retornar endereço pelo Id
 	public Optional<Address> findById(Long id) {
-		return repository.findById(id);
+		return addressRepository.findById(id);
 	}
 
 	
-	public ResponseEntity<Address> createAdress(Address adress) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(adress));
+	//adicionando endereço somente se existir um usuario
+	public ResponseEntity<Address> createAdress(Address address) {
+		if (customerRepository.existsById(address.getCustomer().getId()))
+			return ResponseEntity.status(HttpStatus.CREATED).body(addressRepository.save(address));
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
 	}
-
-	public ResponseEntity<Address> editAdress(Address adress) {
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save(adress));
+	
+	//editando endereço apenas se existir um usuario
+	public ResponseEntity<Address> editAdress(Address address) {
+		
+		if (addressRepository.existsById(address.getId())) {
+		return ResponseEntity.status(HttpStatus.OK).body(addressRepository.save(address));
+		}
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	
 	}
 
-	public void deleteAdress(Long id) {
-		repository.deleteById(id);
+	//deletando um endereço somente se ele existir
+	public ResponseEntity<?> deleteAdress(Long id) {
+
+		return addressRepository.findById(id).map(resposta -> {
+			addressRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}).orElse(ResponseEntity.notFound().build());
+
 	}
 
 }

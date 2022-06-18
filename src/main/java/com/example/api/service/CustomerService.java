@@ -17,28 +17,48 @@ public class CustomerService {
 	@Autowired
 	private CustomerRepository repository;
 
+	
+	//retorna lista completa de clientes
 	public List<Customer> findAll() {
 		return repository.findAllByOrderByNameAsc();
 	}
 
+	//retorna cliente pelo id
 	public Optional<Customer> findById(Long id) {
 		return repository.findById(id);
 	}
 
-	public ResponseEntity<Customer> createCustomer(Customer customer) {
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(customer));
+	
+	//verificando se ja existe um cliente cadastrado, se não tiver, o cadastrado é realizado
+	public Optional<Customer> createCustomer(Customer customer) {
+		
+		if (repository.findByEmail(customer.getEmail()).isPresent())
+			return Optional.empty();
+		
+		
+		return Optional.of(repository.save(customer));
 
 	}
 
+	//editando cliente apenas se ele existir
 	public ResponseEntity<Customer> editCustomer(Customer customer) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save(customer));
+		if (repository.existsById(customer.getId())) {
+			return ResponseEntity.status(HttpStatus.OK).body(repository.save(customer));
+		}
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
 	}
 
-	public void deleteCustomer(Long id) {
-		repository.deleteById(id);
+	//deletando usuario apenas se ele existir
+	public ResponseEntity<?> deleteCustomer(Long id) {
+
+		return repository.findById(id).map(resposta -> {
+			repository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.OK).build();
+		}).orElse(ResponseEntity.notFound().build());
+
 	}
 
 }
