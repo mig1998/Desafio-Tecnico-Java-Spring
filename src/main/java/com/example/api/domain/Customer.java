@@ -15,8 +15,10 @@ import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Entity
-@Table(name="customer")
+@Table(name = "customer")
 public class Customer {
 
 	@Id
@@ -24,18 +26,28 @@ public class Customer {
 	private Long id;
 
 	@Column(nullable = false)
-	@NotEmpty
+	@NotEmpty(message = "O atributo name não pode estar vazio")
 	private String name;
 
 	@Column(nullable = false)
-	@NotEmpty
+	@NotEmpty(message = "O atributo email não pode estar vazio")
 	@Email
+	@Schema(example = "email@email.com")
 	private String email;
-	
-	
+
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("customer")
 	private List<Address> address;
+
+	public Customer(Long id, String name, String email) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+	}
+
+	public Customer() {
+
+	}
 
 	public Long getId() {
 		return id;
@@ -68,7 +80,5 @@ public class Customer {
 	public void setAddress(List<Address> address) {
 		this.address = address;
 	}
-	
-
 
 }

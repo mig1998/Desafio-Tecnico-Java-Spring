@@ -18,7 +18,7 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NotEmpty
+	@NotEmpty(message="O atributo address não pode ser vazio!")
 	private String address;
 	
 	
